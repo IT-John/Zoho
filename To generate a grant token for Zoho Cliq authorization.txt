@@ -1,0 +1,58 @@
+To generate a grant token for Zoho Cliq authorization, you’ll need to follow these steps:
+
+1. Register Your Application:
+    Visit the Zoho API Console and register your application. You’ll need to provide details such as the Client Name, Client Domain, and Authorized Redirect URIs. 
+    Upon registration, you’ll receive a Client ID and Client Secret.
+
+2. Redirect for Authorization:
+    Construct a URL to redirect the user to Zoho’s authorization endpoint. The URL will include parameters like scope, client_id, response_type, redirect_uri, and access_type. 
+    Here’s an example of what the URL might look like:
+    https://accounts.zoho.com/oauth/v2/auth?scope=ZohoCliq.Channels.CREATE,ZohoCliq.Channels.READ&client_id=YOUR_CLIENT_ID&state=STATE&response_type=code&redirect_uri=YOUR_REDIRECT_URI&access_type=offline
+
+    Replace YOUR_CLIENT_ID with your actual Client ID and YOUR_REDIRECT_URI with your actual redirect URI. The state parameter is a unique string that maintains state between the request and the callback. 
+    The scope parameter should include the permissions your application needs.
+
+3. User Grants Permission:
+    The user will be asked to log in to their Zoho account and grant permissions to your application. After granting permission, Zoho will redirect the user to your redirect_uri with a code parameter in the URL.
+
+4. Exchange Code for Grant Token:
+    Use the code parameter you received in the redirect to make a POST request to Zoho’s token endpoint to exchange it for an access token and a refresh token. 
+    The POST request will include your code, redirect_uri, client_id, and client_secret.
+
+    Here’s an example of the POST request you might make to exchange the code for tokens:
+
+
+**Python Code: (START)**
+
+import requests
+
+# The endpoint for obtaining tokens
+token_endpoint = 'https://accounts.zoho.com/oauth/v2/token'
+
+# Parameters for the POST request
+params = {
+    'code': 'AUTHORIZATION_CODE',
+    'redirect_uri': 'YOUR_REDIRECT_URI',
+    'client_id': 'YOUR_CLIENT_ID',
+    'client_secret': 'YOUR_CLIENT_SECRET',
+    'grant_type': 'authorization_code'
+}
+
+# Make the POST request
+response = requests.post(token_endpoint, data=params)
+
+# The response will contain the access token and refresh token
+print(response.json())
+
+**Python Code: (END)**
+
+
+
+AI-generated code. Review and use carefully. More info on FAQ.
+Remember to replace AUTHORIZATION_CODE, YOUR_REDIRECT_URI, YOUR_CLIENT_ID, and YOUR_CLIENT_SECRET with the actual values you received during the process.
+
+The access token is what you’ll use to make authenticated requests to Zoho Cliq, and the refresh token is used to obtain new access tokens once the current one expires.
+
+For a complete guide and the exact URLs to use at each step, please refer to the Zoho Cliq REST API documentation. It provides detailed instructions and the endpoints required for each step of the OAuth process.
+
+If you encounter any issues during this process or need further assistance, feel free to ask!
